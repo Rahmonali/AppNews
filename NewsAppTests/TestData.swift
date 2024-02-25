@@ -2,7 +2,7 @@
 //  TestData.swift
 //  NewsApp
 //
-//  Created by Rahmonali on 24/02/24.
+//  Created by Rahmonali on 25/02/24.
 //
 
 import Foundation

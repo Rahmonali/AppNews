@@ -8,7 +8,14 @@
 import Foundation
 
 class MockNewsService: NewsServiceProtocol {
+    
+    var mockData: Data?
+    var mockError: NewsAPIError?
+    
     func fetchArticle() async throws -> News? {
+        
+        if let mockError { throw mockError }
+        
         do {
             let articles = try JSONDecoder().decode(News.self, from: mockNewsData)
             return articles
