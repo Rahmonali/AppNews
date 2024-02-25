@@ -16,5 +16,5 @@ struct Constants {
         static let path = "/v2/"
     }
     
-    static let APIKey = "f7dc26336ac548cf85354970c6dea4ac"
+    static let APIKey = "82a114825acf46e0b075d280fcdd1cfa"
 }

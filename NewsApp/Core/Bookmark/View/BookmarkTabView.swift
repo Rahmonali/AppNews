@@ -11,6 +11,7 @@ struct BookmarkTabView: View {
     
     @EnvironmentObject var articleBookmarkVM: ArticleBookmarkViewModel
     @State private var searchText: String = ""
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         let articles = self.articles
@@ -19,6 +20,17 @@ struct BookmarkTabView: View {
             ArticleListView(articles: articles)
                 .overlay(overlayView(isEmpty: articles.isEmpty))
                 .navigationTitle("Saved Articles")
+                .toolbar {
+                    ToolbarItem {
+                        Button {
+                            authViewModel.logoutUser()
+                        } label: {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                                .font(.headline.bold())
+                        }
+                        .tint(.black)
+                    }
+                }
         }
         .searchable(text: $searchText)
     }

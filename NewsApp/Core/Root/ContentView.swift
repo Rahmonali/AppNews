@@ -22,41 +22,39 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                switch(selectedTab) {
-                    case .home:
-                        NewsTabView(articles: vm.articles)
-                    case .saved:
-                        BookmarkTabView()
-                }
-                Spacer()
-                    .frame(height: 0)
-                CustomTabBarView(selectedTab: $selectedTab)
+        VStack(spacing: 0) {
+            switch(selectedTab) {
+                case .home:
+                    NewsTabView(articles: vm.articles)
+                case .saved:
+                    BookmarkTabView()
             }
-            .ignoresSafeArea(edges: .bottom)
-            .searchable(text: $searchQuery)
-            .task {
-                await vm.fetchArticleAsync()
-            }
-            .onChange(of: searchQuery) { newValue in
-                Task {
-                    if newValue.isEmpty {
-                        await vm.fetchArticleAsync()
-                    } else {
-                        
-                        if newValue.count > 3 {
-                            await vm.search(searchQuery: newValue)
-                        }
+            Spacer()
+                .frame(height: 0)
+            CustomTabBarView(selectedTab: $selectedTab)
+        }
+        .ignoresSafeArea(edges: .bottom)
+        .searchable(text: $searchQuery)
+        .task {
+            await vm.fetchArticleAsync()
+        }
+        .onChange(of: searchQuery) { newValue in
+            Task {
+                if newValue.isEmpty {
+                    await vm.fetchArticleAsync()
+                } else {
+                    
+                    if newValue.count > 3 {
+                        await vm.search(searchQuery: newValue)
                     }
                 }
             }
-            .alert(
-                Text(vm.errorMessage ?? "Something went wrong"),
-                isPresented: $vm.showAlert) {
-                    Button("OK") {}
-                }
         }
+        .alert(
+            Text(vm.errorMessage ?? "Something went wrong"),
+            isPresented: $vm.showAlert) {
+                Button("OK") {}
+            }
     }
 }
 

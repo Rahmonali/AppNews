@@ -15,76 +15,80 @@ struct DetailArticleView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
-                ZStack {
-                    NewsImageLoader(url: article.imageURL)
+            GeometryReader { geo in
+                VStack {
+                    ZStack {
+                        NewsImageLoader(url: article.imageURL)
+                        
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: articleBookmarkVM.isBookmarked(for: article) ? "bookmark.fill" : "bookmark")
+                                    .font(.title2)
+                                    .onTapGesture {
+                                        toggleBookmark(for: article)
+                                    }
+                                
+                                Spacer()
+                                
+                                Button {
+                                    dismiss()
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .font(.title2.bold())
+                                }
+                            }
+                            .padding(.vertical)
+                            
+                            Spacer()
+                            
+                            Text(article.title)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .lineLimit(3)
+                                .padding(.vertical)
+                            
+                            HStack {
+                                Spacer()
+                                HStack {
+                                    Image(systemName: "calendar")
+                                    Text(HelperFunctions.formattedDateString(from: article.publishedAt))
+                                }
+                            }
+                            .font(.callout)
+                            .padding(.bottom, 5)
+                        }
+                        .padding()
+                    }
+                    .foregroundStyle(.white)
+                    .frame(width: geo.size.width)
+                    
                     
                     VStack(alignment: .leading) {
                         HStack {
-                            Image(systemName: articleBookmarkVM.isBookmarked(for: article) ? "bookmark.fill" : "bookmark")
-                                .font(.title2)
-                                .onTapGesture {
-                                    toggleBookmark(for: article)
-                                }
+                            if let author = article.author {
+                                Text(author)
+                                    .fontWeight(.bold)
+                            }
                             
                             Spacer()
                             
-                            Button {
-                                dismiss()
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .font(.title2.bold())
-                            }
+                            Image(systemName: "newspaper")
                         }
                         .padding(.vertical)
                         
-                        Spacer()
-                        
-                        Text(article.title)
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .lineLimit(3)
-                            .padding(.vertical)
-                        
-                        HStack {
-                            Spacer()
-                            HStack {
-                                Image(systemName: "calendar")
-                                Text(HelperFunctions.formattedDateString(from: article.publishedAt))
-                            }
-                        }
-                        .font(.callout)
-                        .padding(.bottom, 5)
-                    }
-                    .padding()
-                }
-                .foregroundStyle(.white)
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        if let author = article.author {
-                            Text(author)
-                                .fontWeight(.bold)
+                        if let description = article.description {
+                            Text(description)
+                        } else {
+                            Text("This post does not have a description")
                         }
                         
-                        Spacer()
                         
-                        Image(systemName: "newspaper")
                     }
-                    .padding(.vertical)
-                    
-                    if let description = article.description {
-                        Text(description)
-                    } else {
-                        Text("This post does not have a description")
-                    }
-                    
-                    
+                    .font(.body)
+                    .padding(.horizontal)
                 }
-                .font(.body)
-                .padding(.horizontal)
+                .padding(.bottom)
             }
-            .padding(.bottom)
         }
         .ignoresSafeArea(edges: .top)
         .statusBar(hidden: true)
